@@ -6,6 +6,7 @@ use App\Filament\Auth\AdminLogin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Notifications\Livewire\Notifications;
 use Filament\Pages;
 use Filament\Panel;
@@ -67,6 +68,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->databaseNotifications()
             ->databaseNotificationsPolling(3)
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Doctor'),
+            ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),
             ]);
