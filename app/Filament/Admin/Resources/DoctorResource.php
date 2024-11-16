@@ -2,23 +2,24 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\GenderType;
-use App\Enums\RoleType;
-use App\Filament\Admin\Resources\DoctorResource\Pages;
 use App\Models\User;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Notifications\Notification;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
-use Filament\Tables\Columns\TextColumn;
+use App\Enums\RoleType;
+use Filament\Forms\Form;
+use App\Enums\GenderType;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Hash;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Admin\Resources\DoctorResource\Pages;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class DoctorResource extends Resource
 {
@@ -67,6 +68,12 @@ class DoctorResource extends Resource
                         ->required()
                         ->string(),
                     DatePicker::make('birth')->format('d/m/Y')->displayFormat('d/m/Y'),
+                    TextInput::make('password')
+                        ->password()
+                        ->revealable()
+                        ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                        ->dehydrated(fn ($state) => filled($state))
+                        ->required(fn (string $context): bool => $context === 'create')
                 ])->columns(1),
                 Section::make('Doctor Profile')->schema([
                     SpatieMediaLibraryFileUpload::make('profile')
