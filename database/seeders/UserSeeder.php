@@ -22,6 +22,10 @@ class UserSeeder extends Seeder
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('0000000000'),
                 'ssn' => '0000000000',
+                'birth' => '01/01/1950',
+                'gender' => GenderType::male->value,
+                'phone' => '0000000000',
+                'address' => 'Amman',
                 'email_verified_at' => now(),
             ]
         )->assignRole(RoleType::admin->value);
@@ -35,6 +39,10 @@ class UserSeeder extends Seeder
                 'email' => 'doctor@gmail.com',
                 'password' => bcrypt('doctor@gmail.com'),
                 'ssn' => '9638527415',
+                'birth' => '01/01/1950',
+                'gender' => GenderType::male->value,
+                'phone' => '9638527415',
+                'address' => 'Amman',
                 'email_verified_at' => now(),
             ]
         )->assignRole(RoleType::doctor->value);
@@ -48,6 +56,10 @@ class UserSeeder extends Seeder
                 'email' => 'radiologist@gmail.com',
                 'password' => bcrypt('radiologist@gmail.com'),
                 'ssn' => '1593578235',
+                'birth' => '01/01/1950',
+                'gender' => GenderType::male->value,
+                'phone' => '1593578235',
+                'address' => 'Amman',
                 'email_verified_at' => now(),
             ]
         )->assignRole(RoleType::radiologist->value);

@@ -4,7 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\GenderType;
 use App\Enums\RoleType;
-use App\Filament\Admin\Resources\DoctorResource\Pages;
+use App\Filament\Admin\Resources\RadiologistResource\Pages;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -21,28 +21,28 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 
-class DoctorResource extends Resource
+class RadiologistResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationLabel = 'Doctor Management';
+    protected static ?string $navigationLabel = 'Radiologist Management';
 
-    protected static ?string $navigationGroup = 'Doctor';
+    protected static ?string $navigationGroup = 'Radiologist';
 
     protected static ?int $navigationSort = 1;
 
     public static function getNavigationBadge(): ?string
     {
-        $doctor = User::role(RoleType::doctor->value)->count();
+        $radiologist = User::role(RoleType::radiologist->value)->count();
 
-        return $doctor;
+        return $radiologist;
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Doctor Info')->schema([
+                Section::make('Radiologist Info')->schema([
                     TextInput::make('name')
                         ->required()
                         ->string(),
@@ -75,7 +75,7 @@ class DoctorResource extends Resource
                         ->dehydrated(fn ($state) => filled($state))
                         ->required(fn (string $context): bool => $context === 'create'),
                 ])->columns(1),
-                Section::make('Doctor Profile')->schema([
+                Section::make('Radiologist Profile')->schema([
                     SpatieMediaLibraryFileUpload::make('profile')
                         ->image()
                         ->downloadable()
@@ -103,7 +103,7 @@ class DoctorResource extends Resource
             ])
             ->modifyQueryUsing(function (Builder $query) {
                 return $query
-                    ->role([RoleType::doctor->value]);
+                    ->role([RoleType::radiologist->value]);
             })
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -112,8 +112,8 @@ class DoctorResource extends Resource
                     ->successNotification(
                         Notification::make()
                             ->success()
-                            ->title('Doctor deleted')
-                            ->body('The Doctor has been deleted successfully.'),
+                            ->title('Radiologist deleted')
+                            ->body('The Radiologist has been deleted successfully.'),
                     ),
             ])
             ->bulkActions([
@@ -122,8 +122,8 @@ class DoctorResource extends Resource
                         ->successNotification(
                             Notification::make()
                                 ->success()
-                                ->title('All Doctors deleted')
-                                ->body('All Doctors have been deleted successfully.'),
+                                ->title('All Surgeries deleted')
+                                ->body('All Surgeries have been deleted successfully.'),
                         ),
                 ]),
             ]);
@@ -139,10 +139,10 @@ class DoctorResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDoctors::route('/'),
-            'create' => Pages\CreateDoctor::route('/create'),
-            'view' => Pages\ViewDoctor::route('/{record}'),
-            'edit' => Pages\EditDoctor::route('/{record}/edit'),
+            'index' => Pages\ListRadiologists::route('/'),
+            'create' => Pages\CreateRadiologist::route('/create'),
+            'view' => Pages\ViewRadiologist::route('/{record}'),
+            'edit' => Pages\EditRadiologist::route('/{record}/edit'),
         ];
     }
 }

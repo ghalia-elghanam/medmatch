@@ -71,6 +71,8 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Doctor'),
+                NavigationGroup::make()
+                    ->label('Radiologist'),
             ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),
