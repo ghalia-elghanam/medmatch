@@ -1,8 +1,0 @@
-Admin:
-1-activity log => create / update / delete (doctor / radiologist)
-2-backup [database]✅
-3-send notification when create(doctor/radiologist)✅
-4-crud doctor✅
-5-crud radiologist✅
-6-statistics✅
-______________________________________

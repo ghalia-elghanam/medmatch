@@ -10,8 +10,13 @@ use Spatie\Translatable\HasTranslations;
 
 class Allergy extends Model
 {
-    use HasTranslations;
-    use LogsActivity;
+    use HasTranslations,LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name']);
+    }
 
     public $translatable = ['name'];
 
@@ -23,11 +28,5 @@ class Allergy extends Model
     {
         return $this->belongsToMany(User::class, 'user_allgery')
             ->withTimestamps();
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly(['name']);
     }
 }

@@ -78,6 +78,9 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Settings'),
             ])
+            ->resources([
+                config('filament-logger.activity_resource'),
+            ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),
                 FilamentSpatieLaravelBackupPlugin::make()->usingPage(Backups::class),
