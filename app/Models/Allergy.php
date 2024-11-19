@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Translatable\HasTranslations;
 
 class Allergy extends Model
 {
     use HasTranslations;
+    use LogsActivity;
 
     public $translatable = ['name'];
 
@@ -20,5 +23,11 @@ class Allergy extends Model
     {
         return $this->belongsToMany(User::class, 'user_allgery')
             ->withTimestamps();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name']);
     }
 }

@@ -2,25 +2,25 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\AdminLogin;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
+use Filament\Notifications\Livewire\Notifications;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
-use App\Filament\Auth\AdminLogin;
 use Filament\Support\Enums\Alignment;
-use Filament\Navigation\NavigationGroup;
-use Filament\Http\Middleware\Authenticate;
 use Filament\Support\Enums\VerticalAlignment;
-use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Filament\Notifications\Livewire\Notifications;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
 
 class AdminPanelProvider extends PanelProvider
@@ -77,7 +77,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),
-                FilamentSpatieLaravelBackupPlugin::make()
+                FilamentSpatieLaravelBackupPlugin::make(),
             ]);
     }
 }

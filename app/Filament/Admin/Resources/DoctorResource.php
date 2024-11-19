@@ -115,6 +115,7 @@ class DoctorResource extends Resource
                             ->title('Doctor deleted')
                             ->body('The Doctor has been deleted successfully.'),
                     ),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
