@@ -58,9 +58,7 @@ class UserResource extends Resource
                         ->readOnly(auth()->user()->hasRole(RoleType::radiologist->value))
                         ->label('ssn')
                         ->required()
-                        ->unique(ignoreRecord: true)
-                        ->rule(['digits:10'])
-                        ->numeric(),
+                        ->unique(ignoreRecord: true),
                 ])->columns(1),
                 Section::make('Patient Profile')->schema([
                     SpatieMediaLibraryFileUpload::make('profile')

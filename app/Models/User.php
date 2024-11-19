@@ -31,7 +31,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia
                 'email',
                 'ssn',
                 'phone',
-                'password',
                 'result',
                 'birth',
                 'gender',
