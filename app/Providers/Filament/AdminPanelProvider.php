@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Auth\AdminLogin;
+use App\Filament\Pages\Backups;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -74,10 +75,12 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Doctor'),
                 NavigationGroup::make()
                     ->label('Radiologist'),
+                NavigationGroup::make()
+                    ->label('Settings'),
             ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),
-                FilamentSpatieLaravelBackupPlugin::make(),
+                FilamentSpatieLaravelBackupPlugin::make()->usingPage(Backups::class),
             ]);
     }
 }
