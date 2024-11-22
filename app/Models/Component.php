@@ -8,7 +8,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Translatable\HasTranslations;
 
-class Allergy extends Model
+class Component extends Model
 {
     use HasTranslations,LogsActivity;
 
@@ -24,9 +24,8 @@ class Allergy extends Model
         'name',
     ];
 
-    public function users(): BelongsToMany
+    public function medicines(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_allgery')
-            ->withTimestamps();
+        return $this->belongsToMany(Medicine::class, 'medicine_component')->withTimestamps();
     }
 }

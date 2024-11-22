@@ -91,27 +91,21 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         }
     }
 
-    public function surgeries(): BelongsToMany
+    public function allergies_medicine(): BelongsToMany
     {
-        return $this->belongsToMany(Surgery::class, 'user_surgery')
+        return $this->belongsToMany(Medicine::class, 'user_allergy_medicine', 'user_id', 'user_allergy_medicine_id')
             ->withTimestamps();
     }
 
-    public function allergies(): BelongsToMany
+    public function allergies_component(): BelongsToMany
     {
-        return $this->belongsToMany(Allergy::class, 'user_allergy')
+        return $this->belongsToMany(Component::class, 'user_allergy_component', 'user_id', 'user_allergy_component_id')
             ->withTimestamps();
     }
 
     public function medicines(): BelongsToMany
     {
         return $this->belongsToMany(Medicine::class, 'user_medicine')
-            ->withTimestamps();
-    }
-
-    public function diseases(): BelongsToMany
-    {
-        return $this->belongsToMany(Disease::class, 'user_disease')
             ->withTimestamps();
     }
 }

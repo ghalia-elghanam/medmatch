@@ -17,8 +17,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             MedicineSeeder::class,
             RestrictedMedicineSeeder::class,
-            AllergySeeder::class,
-            UserAllergySeeder::class,
         ]);
     }
 }

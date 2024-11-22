@@ -4,10 +4,8 @@ namespace App\Filament\Doctor\Resources;
 
 use App\Enums\RoleType;
 use App\Filament\Doctor\Resources\UserResource\Pages;
-use App\Models\Allergy;
-use App\Models\Disease;
+use App\Models\Component;
 use App\Models\Medicine;
-use App\Models\Surgery;
 use App\Models\User;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Section;
@@ -32,7 +30,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'Patient';
 
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 3;
 
     public static function getNavigationBadge(): ?string
     {
@@ -75,50 +73,8 @@ class UserResource extends Resource
                         ->disabled(auth()->user()->hasRole(RoleType::doctor->value)),
                 ])->columns(1),
                 Section::make('Patient History')->schema([
-                    Select::make('surgeries')
-                        ->relationship('surgeries', 'name')
-                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                        ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
-                        ->multiple()
-                        ->preload()
-                        ->searchable()
-                        ->hintAction(
-                            fn (Select $component) => Action::make('select all')
-                                ->action(fn () => $component->state(Surgery::pluck('id')->toArray()))
-                        )
-                        ->createOptionForm([
-                            Translate::make()
-                                ->schema([
-                                    TextInput::make('name')
-                                        ->required()
-                                        ->string(),
-                                ])
-                                ->columnSpanFull()
-                                ->locales(config('app.available_locale')),
-                        ]),
-                    Select::make('allergies')
-                        ->relationship('allergies', 'name')
-                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                        ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
-                        ->multiple()
-                        ->preload()
-                        ->searchable()
-                        ->hintAction(
-                            fn (Select $component) => Action::make('select all')
-                                ->action(fn () => $component->state(Allergy::pluck('id')->toArray()))
-                        )
-                        ->createOptionForm([
-                            Translate::make()
-                                ->schema([
-                                    TextInput::make('name')
-                                        ->required()
-                                        ->string(),
-                                ])
-                                ->columnSpanFull()
-                                ->locales(config('app.available_locale')),
-                        ]),
-                    Select::make('medicines')
-                        ->relationship('medicines', 'name')
+                    Select::make('allergies_medicine')
+                        ->relationship('allergies_medicine', 'name')
                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                         ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
                         ->multiple()
@@ -138,8 +94,8 @@ class UserResource extends Resource
                                 ->columnSpanFull()
                                 ->locales(config('app.available_locale')),
                         ]),
-                    Select::make('diseases')
-                        ->relationship('diseases', 'name')
+                    Select::make('allergies_component')
+                        ->relationship('allergies_component', 'name')
                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                         ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
                         ->multiple()
@@ -147,7 +103,7 @@ class UserResource extends Resource
                         ->searchable()
                         ->hintAction(
                             fn (Select $component) => Action::make('select all')
-                                ->action(fn () => $component->state(Disease::pluck('id')->toArray()))
+                                ->action(fn () => $component->state(Component::pluck('id')->toArray()))
                         )
                         ->createOptionForm([
                             Translate::make()

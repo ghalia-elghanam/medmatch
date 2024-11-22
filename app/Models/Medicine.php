@@ -24,16 +24,21 @@ class Medicine extends Model
         'name',
     ];
 
-    public function users(): BelongsToMany
+    public function components(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_medicine')
-            ->withTimestamps();
+        return $this->belongsToMany(Component::class, 'medicine_component')->withTimestamps();
     }
 
     public function restrictedMedicines(): BelongsToMany
     {
         return $this->belongsToMany(Medicine::class, 'restricted_medicines', 'medicine_id', 'restricted_medicine_id')
             ->withPivot('msg')
+            ->withTimestamps();
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_medicine')
             ->withTimestamps();
     }
 }

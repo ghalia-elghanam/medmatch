@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_allergy', function (Blueprint $table) {
+        Schema::create('user_allergy_component', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('allergy_id')->constrained('allergies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_allergy_component_id')->constrained('components')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

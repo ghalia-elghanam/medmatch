@@ -27,7 +27,7 @@ class ResultResource extends Resource
 
     protected static ?string $navigationGroup = 'Patient';
 
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationBadge(): ?string
     {
@@ -57,8 +57,9 @@ class ResultResource extends Resource
                             ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))
                     )
                     ->reactive()
-                    ->afterStateUpdated(function ($state) {
-                        $conflicts = static::matchingAlgorithm($state);
+                    ->afterStateUpdated(function ($state, $livewire) {
+                        $patient = $livewire->record; // أو الطريقة المناسبة للحصول على المريض
+                        $conflicts = static::matchingAlgorithm($state, $patient);
                         if ($conflicts) {
                             $messages = $conflicts->pluck('msg')->unique()->implode(', ');
                             Notification::make()
@@ -82,30 +83,43 @@ class ResultResource extends Resource
             ]);
     }
 
-    // matching algorithm
-    public static function matchingAlgorithm(array $selectedMedicineIds)
+    public static function matchingAlgorithm(array $selectedMedicineIds, User $patient)
     {
+        // 1. Check if the patient is allergic to any selected medicines
+        $allergicMedicines = DB::table('user_allergy_medicine')
+            ->where('user_id', $patient->id)
+            ->whereIn('user_allergy_medicine_id', $selectedMedicineIds)
+            ->get(['user_allergy_medicine_id']);
+
+        if ($allergicMedicines->isNotEmpty()) {
+            return collect(['msg' => 'Patient is allergic to one or more selected medicines.']);
+        }
+
+        // 2. Check if the patient is allergic to any components of the selected medicines
+        $medicineComponents = DB::table('medicine_component')
+            ->whereIn('medicine_id', $selectedMedicineIds)
+            ->pluck('component_id');
+
+        $allergicComponents = DB::table('user_allergy_component')
+            ->where('user_id', $patient->id)
+            ->whereIn('user_allergy_component_id', $medicineComponents)
+            ->get(['user_allergy_component_id']);
+
+        if ($allergicComponents->isNotEmpty()) {
+            return collect(['msg' => 'Patient is allergic to one or more components of the selected medicines.']);
+        }
+
+        // 3. Check for restricted combinations between selected medicines
         $restrictions = DB::table('restricted_medicines')
             ->whereIn('medicine_id', $selectedMedicineIds)
             ->whereIn('restricted_medicine_id', $selectedMedicineIds)
             ->get(['medicine_id', 'restricted_medicine_id', 'msg']);
-        if ($restrictions->isNotEmpty()) {
-            return $restrictions; // result of medicine
-        }
-        // // get component id
-        // $components = DB::table('medicine_component')
-        //     ->whereIn('medicine_id', $selectedMedicineIds)
-        //     ->pluck('component_id');
-        // // search by component id in restricted_components
-        // $conflicts = DB::table('restricted_components')
-        //     ->whereIn('component_id', $components)
-        //     ->whereIn('restricted_component_id', $components)
-        //     ->get(['component_id', 'restricted_component_id', 'msg']);
-        // if ($conflicts->isNotEmpty()) {
-        //     return $conflicts; // result of componet
-        // }
 
-        return null; // no matching algorithm الدواء دا سليم
+        if ($restrictions->isNotEmpty()) {
+            return $restrictions; // Return the conflicting medicines and messages
+        }
+
+        return null; // No conflicts detected
     }
 
     public static function table(Table $table): Table

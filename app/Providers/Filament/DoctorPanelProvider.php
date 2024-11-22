@@ -69,7 +69,7 @@ class DoctorPanelProvider extends PanelProvider
                 Authenticate::class,
             ])->navigationGroups([
                 NavigationGroup::make()
-                    ->label('Medical Record'),
+                    ->label('Medicine Management'),
                 NavigationGroup::make()
                     ->label('Patient'),
             ])
