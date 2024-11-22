@@ -58,18 +58,21 @@ class ResultResource extends Resource
                     )
                     ->reactive()
                     ->afterStateUpdated(function ($state, $livewire) {
-                        $patient = $livewire->record; // أو الطريقة المناسبة للحصول على المريض
+                        $patient = $livewire->record;
                         $conflicts = static::matchingAlgorithm($state, $patient);
+
                         if ($conflicts) {
-                            $messages = $conflicts->pluck('msg')->unique()->implode(', ');
+                            $messages = $conflicts->pluck('msg')->unique()->implode(' & ');
+
                             Notification::make()
-                                ->title('Conflict Detected')
-                                ->body('Reason : '.$messages)
+                                ->title('Conflicts Detected')
+                                ->body("Reasons: $messages")
                                 ->warning()
                                 ->persistent()
                                 ->send();
                         }
                     })
+
                     ->createOptionForm([
                         Translate::make()
                             ->schema([
@@ -85,28 +88,41 @@ class ResultResource extends Resource
 
     public static function matchingAlgorithm(array $selectedMedicineIds, User $patient)
     {
+        $messages = collect();
+
         // 1. Check if the patient is allergic to any selected medicines
         $allergicMedicines = DB::table('user_allergy_medicine')
             ->where('user_id', $patient->id)
             ->whereIn('user_allergy_medicine_id', $selectedMedicineIds)
             ->get(['user_allergy_medicine_id']);
-
         if ($allergicMedicines->isNotEmpty()) {
-            return collect(['msg' => 'Patient is allergic to one or more selected medicines.']);
+            $medicineNames = DB::table('medicines')
+                ->whereIn('id', $allergicMedicines->pluck('user_allergy_medicine_id'))
+                ->pluck('name')
+                ->map(fn ($name) => json_decode($name, true)['en'] ?? 'Unknown') // استخراج الاسم باللغة الإنجليزية
+                ->implode(', ');
+            $messages->push((object) [
+                'msg' => "The patient is allergic to these medicines: $medicineNames.",
+            ]);
         }
 
         // 2. Check if the patient is allergic to any components of the selected medicines
         $medicineComponents = DB::table('medicine_component')
             ->whereIn('medicine_id', $selectedMedicineIds)
             ->pluck('component_id');
-
         $allergicComponents = DB::table('user_allergy_component')
             ->where('user_id', $patient->id)
             ->whereIn('user_allergy_component_id', $medicineComponents)
             ->get(['user_allergy_component_id']);
-
         if ($allergicComponents->isNotEmpty()) {
-            return collect(['msg' => 'Patient is allergic to one or more components of the selected medicines.']);
+            $componentNames = DB::table('components')
+                ->whereIn('id', $allergicComponents->pluck('user_allergy_component_id'))
+                ->pluck('name')
+                ->map(fn ($name) => json_decode($name, true)['en'] ?? 'Unknown') // استخراج الاسم باللغة الإنجليزية
+                ->implode(', ');
+            $messages->push((object) [
+                'msg' => "The patient is allergic to these components: $componentNames.",
+            ]);
         }
 
         // 3. Check for restricted combinations between selected medicines
@@ -114,12 +130,16 @@ class ResultResource extends Resource
             ->whereIn('medicine_id', $selectedMedicineIds)
             ->whereIn('restricted_medicine_id', $selectedMedicineIds)
             ->get(['medicine_id', 'restricted_medicine_id', 'msg']);
-
         if ($restrictions->isNotEmpty()) {
-            return $restrictions; // Return the conflicting medicines and messages
+            $restrictionMessages = $restrictions->map(function ($restriction) {
+                return (object) [
+                    'msg' => $restriction->msg,
+                ];
+            });
+            $messages = $messages->merge($restrictionMessages);
         }
 
-        return null; // No conflicts detected
+        return $messages->isNotEmpty() ? $messages : null;
     }
 
     public static function table(Table $table): Table
