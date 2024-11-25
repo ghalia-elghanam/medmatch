@@ -35,7 +35,7 @@ class DoctorPanelProvider extends PanelProvider
             ->login(Login::class)
             ->passwordReset()
             ->sidebarCollapsibleOnDesktop(true)
-
+            // logo of doctor dasboard
             ->brandLogo(url('logo.png'))
             ->brandLogoHeight('5rem')
             ->favicon(url('logo.png'))
@@ -67,13 +67,14 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])->navigationGroups([
+            ])
+            ->navigationGroups([ // group
                 NavigationGroup::make()
                     ->label('Medicine Management'),
                 NavigationGroup::make()
                     ->label('Patient'),
             ])
-            ->plugins([
+            ->plugins([ // plugin
                 FilamentApexChartsPlugin::make(),
             ]);
     }

@@ -15,14 +15,13 @@ class SystemOverview extends BaseWidget
     {
         return [
             Stat::make('Patients', User::role(RoleType::patient->value)->count())
-                ->icon('heroicon-o-users')
-                ->color('primary'),
+                ->icon('heroicon-o-users'), // hero icon
+
             Stat::make('Radiologist', User::role(RoleType::radiologist->value)->count())
-                ->icon('heroicon-o-viewfinder-circle')
-                ->color('primary'),
+                ->icon('heroicon-o-viewfinder-circle'),
+
             Stat::make('Doctors', User::role(RoleType::doctor->value)->count())
-                ->icon('heroicon-o-beaker')
-                ->color('primary'),
+                ->icon('heroicon-o-beaker'),
         ];
     }
 }

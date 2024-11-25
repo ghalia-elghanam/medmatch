@@ -26,15 +26,13 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationLabel = 'Patient Information';
-
-    protected static ?string $navigationGroup = 'Patient';
-
-    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationGroup = 'Patient';// group name
+    protected static ?string $navigationLabel = 'Patient Information';  // label
+    protected static ?int $navigationSort = 3; // sort
 
     public static function getNavigationBadge(): ?string
     {
-        $patient = User::role(RoleType::patient->value)->count();
+        $patient = User::role(RoleType::patient->value)->count(); // هاتلي عدد كل المرضي
 
         return $patient;
     }
@@ -136,9 +134,6 @@ class UserResource extends Resource
                 return $query
                     ->role([RoleType::patient->value]);
             })
-            ->filters([
-                //
-            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -149,26 +144,8 @@ class UserResource extends Resource
                             ->title('User deleted')
                             ->body('The User has been deleted successfully.'),
                     ),
-            ])
-            ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make()->successNotification(
-                //         Notification::make()
-                //             ->success()
-                //             ->title('All Users deleted')
-                //             ->body('All Users have been deleted successfully.'),
-                //     ),
-                // ]),
             ]);
     }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [

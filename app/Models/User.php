@@ -71,7 +71,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia
             set: fn ($value) => Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d'),
         );
     }
-
+    // دول الاتنين كولكشن اللي الدكاتره بتتعامل معاهم
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile')->singleFile();
@@ -90,19 +90,19 @@ class User extends Authenticatable implements FilamentUser, HasMedia
             return false;
         }
     }
-
+    // حساسية المريض من الدواء
     public function allergies_medicine(): BelongsToMany
     {
         return $this->belongsToMany(Medicine::class, 'user_allergy_medicine', 'user_id', 'user_allergy_medicine_id')
             ->withTimestamps();
     }
-
+    // حساسية المريض من المكون
     public function allergies_component(): BelongsToMany
     {
         return $this->belongsToMany(Component::class, 'user_allergy_component', 'user_id', 'user_allergy_component_id')
             ->withTimestamps();
     }
-
+    // matching algorithm
     public function medicines(): BelongsToMany
     {
         return $this->belongsToMany(Medicine::class, 'user_medicine')

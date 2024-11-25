@@ -71,18 +71,7 @@ class ResultResource extends Resource
                                 ->persistent()
                                 ->send();
                         }
-                    })
-
-                    ->createOptionForm([
-                        Translate::make()
-                            ->schema([
-                                TextInput::make('name')
-                                    ->required()
-                                    ->string(),
-                            ])
-                            ->columnSpanFull()
-                            ->locales(config('app.available_locale')),
-                    ]),
+                    }),
             ]);
     }
 
@@ -96,6 +85,7 @@ class ResultResource extends Resource
             ->whereIn('user_allergy_medicine_id', $selectedMedicineIds)
             ->get(['user_allergy_medicine_id']);
         if ($allergicMedicines->isNotEmpty()) {
+            // get name of medicine
             $medicineNames = DB::table('medicines')
                 ->whereIn('id', $allergicMedicines->pluck('user_allergy_medicine_id'))
                 ->pluck('name')
@@ -107,6 +97,7 @@ class ResultResource extends Resource
         }
 
         // 2. Check if the patient is allergic to any components of the selected medicines
+        // بشوف مكونات الدواء اللي اخترته عشان اقدر اسرش عليها
         $medicineComponents = DB::table('medicine_component')
             ->whereIn('medicine_id', $selectedMedicineIds)
             ->pluck('component_id');

@@ -11,11 +11,13 @@ use Illuminate\Validation\ValidationException;
 
 class Login extends AuthLogin
 {
+    // دي بتحط ال heading
     public function getHeading(): string|Htmlable
     {
         return __('Doctor Login');
     }
 
+    // عبارة عن حقول الادخال اللي بتستقبل البيانات
     public function form(Form $form): Form
     {
         return $form
@@ -27,16 +29,16 @@ class Login extends AuthLogin
             ->statePath('data');
     }
 
+    // دا تفصيل حقل ال ssn
     protected function getSsnFormComponent(): Component
     {
         return TextInput::make('ssn')
             ->label('SSN')
             ->required()
-            ->autocomplete()
-            ->autofocus()
             ->extraInputAttributes(['tabindex' => 1]);
     }
 
+    // ssn & password
     protected function getCredentialsFromFormData(array $data): array
     {
         return [
@@ -45,10 +47,13 @@ class Login extends AuthLogin
         ];
     }
 
+
+    // error message when ssn wrong or password
     protected function throwFailureValidationException(): never
     {
         throw ValidationException::withMessages([
             'data.ssn' => __('Invalid SSN'),
+            'data.password' => __('Invalid Password'),
         ]);
     }
 }

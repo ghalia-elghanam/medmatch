@@ -14,16 +14,16 @@ class EditComponent extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\ViewAction::make(), // view
+            Actions\DeleteAction::make(), // delete
         ];
     }
-
+    // دي الفنكشن اللي بترجعك للجدول تاني
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
     }
-
+    // دا الاشعار اللي بيوصل
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()

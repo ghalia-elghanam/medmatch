@@ -24,6 +24,7 @@ class Medicine extends Model
         'name',
     ];
 
+    // ربط الدواء بالمكون
     public function components(): BelongsToMany
     {
         return $this->belongsToMany(Component::class, 'medicine_component')->withTimestamps();

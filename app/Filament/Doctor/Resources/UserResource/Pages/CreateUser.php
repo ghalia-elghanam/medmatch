@@ -23,14 +23,14 @@ class CreateUser extends CreateRecord
             ->title('User created')
             ->body('The User has been created successfully.');
     }
-
+    // email verify
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['email_verified_at'] = now();
 
         return $data;
     }
-
+    // take role of patient
     protected function afterCreate(): void
     {
         $this->record->assignRole(RoleType::patient->value);

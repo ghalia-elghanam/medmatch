@@ -21,45 +21,31 @@ class MedicineResource extends Resource
 {
     protected static ?string $model = Medicine::class;
 
-    protected static ?string $navigationGroup = 'Medicine Management';
+    protected static ?string $navigationGroup = 'Medicine Management'; // group name
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 2; // order resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getModel()::count(); // number of records
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Translate::make()
+                Translate::make() // translated
                     ->schema([
-                        TextInput::make('name')->string(),
+                        TextInput::make('name')->string(), // name feild
                     ])
-                    ->locales(config('app.available_locale')),
+                    ->locales(config('app.available_locale')), // en ar
                 Select::make('components')
                     ->relationship('components', 'name')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
-                    ->multiple()
-                    ->preload()
-                    ->searchable()
-                    ->hintAction(
-                        fn (Select $component) => Action::make('select all')
-                            ->action(fn () => $component->state(Component::pluck('id')->toArray()))
-                    )
-                    ->createOptionForm([
-                        Translate::make()
-                            ->schema([
-                                TextInput::make('name')
-                                    ->required()
-                                    ->string(),
-                            ])
-                            ->columnSpanFull()
-                            ->locales(config('app.available_locale')),
-                    ]),
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name) // return name
+                    ->disabled(auth()->user()->hasRole(RoleType::radiologist->value)) // prevent radiologist
+                    ->multiple() // الدواء الواحد يمكن ان يحتوي علي اكثر من مكون
+                    ->preload() // حملهم قبل ما الصفحة تحمل كلها
+                    ->searchable() // بقدر اعمل سيرش فيها
             ])->columns(1);
     }
 
@@ -67,41 +53,20 @@ class MedicineResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
+                TextColumn::make('name')->searchable(), // column name
 
             ])
-            ->filters([
-                //
-            ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\ViewAction::make(), // view
+                Tables\Actions\EditAction::make(), // edit
+                Tables\Actions\DeleteAction::make() // delete
                     ->successNotification(
                         Notification::make()
                             ->success()
                             ->title('Medicine deleted')
                             ->body('The Medicine has been deleted successfully.'),
                     ),
-            ])
-            ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make()
-                //         ->successNotification(
-                //             Notification::make()
-                //                 ->success()
-                //                 ->title('All Medicines deleted')
-                //                 ->body('All Medicines have been deleted successfully.'),
-                //         ),
-                // ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

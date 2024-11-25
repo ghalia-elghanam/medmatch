@@ -17,67 +17,45 @@ class ComponentResource extends Resource
 {
     protected static ?string $model = Component::class;
 
-    protected static ?string $navigationGroup = 'Medicine Management';
+    protected static ?string $navigationGroup = 'Medicine Management'; // group name
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 1; // order resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getModel()::count(); // number of records
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Translate::make()
+                Translate::make() // translated
                     ->schema([
-                        TextInput::make('name')->string(),
+                        TextInput::make('name')->string(), // name feild
                     ])
-                    ->locales(config('app.available_locale')),
-            ])->columns(1);
+                    ->locales(config('app.available_locale')), // ar en
+            ])->columns(1); // take full width
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-            ])
-            ->filters([
-                //
+                TextColumn::make('name')->searchable(), // name column
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\ViewAction::make(), // view
+                Tables\Actions\EditAction::make(), // edit
+                Tables\Actions\DeleteAction::make() // delete
                     ->successNotification(
                         Notification::make()
                             ->success()
                             ->title('Component deleted')
                             ->body('The Component has been deleted successfully.'),
                     ),
-            ])
-            ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make()
-                //         ->successNotification(
-                //             Notification::make()
-                //                 ->success()
-                //                 ->title('All Medicines deleted')
-                //                 ->body('All Medicines have been deleted successfully.'),
-                //         ),
-                // ]),
             ]);
     }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
