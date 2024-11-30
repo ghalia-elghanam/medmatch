@@ -21,12 +21,19 @@ class ActivityTable extends BaseWidget
             ->query(ActivityResource::getEloquentQuery())
             ->defaultPaginationPageOption(5)
             ->defaultSort('created_at', 'desc')
-            ->actions([
-                ViewAction::make(),
-            ])
             ->columns([
+                // TextColumn::make('causer.name')
+                //     ->label('User'),
                 TextColumn::make('causer.name')
-                    ->label(__('filament-logger::filament-logger.resource.label.user')),
+                    ->label('User')
+                    ->getStateUsing(function ($record) {
+                        return $record?->causer?->name ?? 'System';
+                    }),
+                    TextColumn::make('causer.roles.name')
+                    ->label('Role')
+                    ->getStateUsing(function ($record) {
+                        return $record?->causer?->roles?->pluck('name')->join(', ') ?? 'No Role';
+                    }),
                 TextColumn::make('event')
                     ->label(__('filament-logger::filament-logger.resource.label.event')),
                 TextColumn::make('subject_type')
@@ -38,7 +45,7 @@ class ActivityTable extends BaseWidget
                         return Str::of($state)->afterLast('\\')->headline() . ' (record) ' . $record->subject_id;
                     }),
                 TextColumn::make('created_at')
-                    ->label(__('filament-logger::filament-logger.resource.label.logged_at'))
+                    ->label('Logged At')
                     ->dateTime(config('filament-logger.datetime_format', 'd/m/Y H:i:s'), config('app.timezone'))
                     ->sortable(),
             ]);

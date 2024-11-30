@@ -13,12 +13,12 @@ class CreateDoctor extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        return $this->getResource()::getUrl('index'); // return me to index page
     }
 
     protected function getCreatedNotification(): ?Notification
     {
-        return Notification::make()
+        return Notification::make() // create notification
             ->success()
             ->title('Doctor created')
             ->body('The Doctor has been created successfully.');
@@ -26,13 +26,12 @@ class CreateDoctor extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['email_verified_at'] = now();
-
+        $data['email_verified_at'] = now(); // verify email
         return $data;
     }
 
     protected function afterCreate(): void
     {
-        $this->record->assignRole(RoleType::doctor->value);
+        $this->record->assignRole(RoleType::doctor->value); // give role doctor
     }
 }

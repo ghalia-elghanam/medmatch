@@ -22,7 +22,6 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser, HasMedia
 {
     use HasFactory, HasRoles, InteractsWithMedia, LogsActivity, Notifiable;
-
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -31,6 +30,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia
                 'email',
                 'ssn',
                 'phone',
+                'email_verified_at',
                 'result',
                 'birth',
                 'gender',
@@ -67,8 +67,8 @@ class User extends Authenticatable implements FilamentUser, HasMedia
     public function birth(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('d/m/Y'),
-            set: fn ($value) => Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d'),
+            get: fn($value) => Carbon::parse($value)->format('d/m/Y'),
+            set: fn($value) => Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d'),
         );
     }
     // دول الاتنين كولكشن اللي الدكاتره بتتعامل معاهم

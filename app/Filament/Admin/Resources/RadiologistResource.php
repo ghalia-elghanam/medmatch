@@ -25,7 +25,7 @@ class RadiologistResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationLabel = 'Radiologist Management';
+    protected static ?string $navigationLabel = 'Radiologist Management'; // 
 
     protected static ?string $navigationGroup = 'Radiologist';
 
@@ -52,13 +52,11 @@ class RadiologistResource extends Resource
                     TextInput::make('ssn')
                         ->label('ssn')
                         ->required()
-                        ->unique(ignoreRecord: true)
-                        ->rule(['digits:10'])
-                        ->numeric(),
+                        ->unique(ignoreRecord: true),
                     Select::make('gender')
                         ->options([
-                            'male' => GenderType::male->value,
-                            'female' => GenderType::female->value,
+                            GenderType::male->value => GenderType::male->name,
+                            GenderType::female->value => GenderType::female->name,
                         ])
                         ->required(),
                     TextInput::make('address')

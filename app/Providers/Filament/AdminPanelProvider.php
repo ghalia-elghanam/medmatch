@@ -28,8 +28,8 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        Notifications::alignment(Alignment::Center);
-        Notifications::verticalAlignment(VerticalAlignment::Start);
+        Notifications::alignment(Alignment::Center); // horizontal
+        Notifications::verticalAlignment(VerticalAlignment::Start); // vertical
 
         return $panel
             ->default()
@@ -82,8 +82,8 @@ class AdminPanelProvider extends PanelProvider
             //     config('filament-logger.activity_resource'),
             // ])
             ->plugins([
-                FilamentApexChartsPlugin::make(),
-                FilamentSpatieLaravelBackupPlugin::make()->usingPage(Backups::class),
+                // FilamentApexChartsPlugin::make(),
+                FilamentSpatieLaravelBackupPlugin::make()->usingPage(Backups::class), // backup
             ]);
     }
 }

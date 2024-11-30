@@ -25,15 +25,15 @@ class DoctorResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationLabel = 'Doctor Management';
+    protected static ?string $navigationLabel = 'Doctor Management'; // label
 
-    protected static ?string $navigationGroup = 'Doctor';
+    protected static ?string $navigationGroup = 'Doctor'; // group name
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 1; // sort order
 
     public static function getNavigationBadge(): ?string
     {
-        $doctor = User::role(RoleType::doctor->value)->count();
+        $doctor = User::role(RoleType::doctor->value)->count(); // return number of doctors
 
         return $doctor;
     }
@@ -52,13 +52,11 @@ class DoctorResource extends Resource
                     TextInput::make('ssn')
                         ->label('ssn')
                         ->required()
-                        ->unique(ignoreRecord: true)
-                        ->rule(['digits:10'])
-                        ->numeric(),
-                    Select::make('gender')
+                        ->unique(ignoreRecord: true),
+                    Select::make('gender') // name => show to user & value => go to database
                         ->options([
-                            'male' => GenderType::male->value,
-                            'female' => GenderType::female->value,
+                            GenderType::male->value => GenderType::male->name,
+                            GenderType::female->value => GenderType::female->name,
                         ])
                         ->required(),
                     TextInput::make('address')
@@ -69,8 +67,8 @@ class DoctorResource extends Resource
                         ->string(),
                     DatePicker::make('birth')->format('d/m/Y')->displayFormat('d/m/Y'),
                     TextInput::make('password')
-                        ->password()
-                        ->revealable()
+                        ->password() // show it as a (*)
+                        ->revealable() // eye
                         ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                         ->dehydrated(fn ($state) => filled($state))
                         ->required(fn (string $context): bool => $context === 'create'),
@@ -92,20 +90,22 @@ class DoctorResource extends Resource
                 TextColumn::make('name'),
                 TextColumn::make('email'),
                 TextColumn::make('ssn')
-                    ->searchable(),
+                    ->searchable(), // search by ssn
                 TextColumn::make('gender'),
                 TextColumn::make('address'),
                 TextColumn::make('phone'),
                 TextColumn::make('birth'),
                 SpatieMediaLibraryImageColumn::make('profile')
-                    ->circular()
+                    // ->circular() // circle picture
                     ->collection('profile'),
             ])
+            // filter by type
             ->modifyQueryUsing(function (Builder $query) {
                 return $query
                     ->role([RoleType::doctor->value]);
             })
             ->actions([
+                // 3 actions for each record
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
@@ -118,6 +118,7 @@ class DoctorResource extends Resource
 
             ])
             ->bulkActions([
+                // delete all
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->successNotification(

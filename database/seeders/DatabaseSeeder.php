@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
+        $seeders = [
             RoleSeeder::class,
             MedicineSeeder::class,
             RestrictedMedicineSeeder::class,
@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UserMedicineAllergySeeder::class,
             UserComponentAllergySeeder::class,
-        ]);
+        ];
+        foreach ($seeders as $seeder) {
+            $this->call($seeder);
+            $this->command->outputComponents()->success("{$seeder} run successfully!");
+        }
     }
 }
