@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\RoleType;
+use Exception;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -77,7 +78,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         $this->addMediaCollection('profile')->singleFile();
         $this->addMediaCollection('rays');
     }
-
     public function canAccessPanel(Panel $panel): bool
     {
         $user = Auth::user();
@@ -85,7 +85,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         if ($panel->getId() === 'admin') {
             return $user->hasRole(RoleType::admin->value);
         } elseif ($panel->getId() === 'doctor') {
-            return $user->hasRole(RoleType::doctor->value) || $user->hasRole(RoleType::radiologist->value);
+            return $user->hasRole(RoleType::doctor->value) || $user->hasRole(RoleType::radiologist->value) || $user->hasRole(RoleType::receptionist->value);
         } else {
             return false;
         }

@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         //############ Admin #############
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'admin@gmail.com'],
             [
                 'name' => 'Admin',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         //############ Admin #############
 
         //############ Doctor #############
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'doctor@gmail.com'],
             [
                 'name' => 'Doctor',
@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
         //############ Doctor #############
 
         //############ Radiologist #############
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'radiologist@gmail.com'],
             [
                 'name' => 'Radiologist',
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
 
         //############ Patients #############
         // 1
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'yousef.jabr@gmail.com'],
             [
                 'name' => 'Yousef Jabr',
@@ -82,7 +82,7 @@ class UserSeeder extends Seeder
             ]
         )->assignRole(RoleType::patient->value);
         // 2
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'sumaya.ayad@gmail.com'],
             [
                 'name' => 'Sumaya Ayad',
@@ -97,7 +97,7 @@ class UserSeeder extends Seeder
             ]
         )->assignRole(RoleType::patient->value);
         // 3
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'marah.aldaqa@gmail.com'],
             [
                 'name' => 'Marah Aldaqa',
@@ -112,7 +112,7 @@ class UserSeeder extends Seeder
             ]
         )->assignRole(RoleType::patient->value);
         // 4
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'khalid.aleimran@gmail.com'],
             [
                 'name' => 'khalid Aleimran',
@@ -127,7 +127,7 @@ class UserSeeder extends Seeder
             ]
         )->assignRole(RoleType::patient->value);
         // 5
-        User::updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'nada.azzam@gmail.com'],
             [
                 'name' => 'Nada Azzam',
@@ -142,5 +142,23 @@ class UserSeeder extends Seeder
             ]
         )->assignRole(RoleType::patient->value);
         //############ Patients #############
+
+
+        //############ receptionist #############
+        User::query()->updateOrCreate(
+            ['email' => 'receptionist@gmail.com'],
+            [
+                'name' => 'Receptionist',
+                'email' => 'receptionist@gmail.com',
+                'password' => bcrypt('receptionist@gmail.com'),
+                'ssn' => '5556662221',
+                'birth' => '01/01/1950',
+                'gender' => GenderType::male->value,
+                'phone' => '5556662221',
+                'address' => 'Amman',
+                'email_verified_at' => now(),
+            ]
+        )->assignRole(RoleType::receptionist->value);
+        //############ receptionist #############
     }
 }
