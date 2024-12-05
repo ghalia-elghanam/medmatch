@@ -33,11 +33,12 @@ class Register extends AuthRegister
                 ->password()
                 ->revealable(filament()->arePasswordsRevealable())
                 ->required()
-                ->rule(Password::min(8) //length 8
-                    ->mixedCase() // A a
-                    ->numbers() // 45
-                    ->symbols(), // & $ #
-                    )
+                ->rule(
+                    Password::min(8) //length 8
+                        ->mixedCase() // A a
+                        ->numbers() // 45
+                        ->symbols(), // & $ #
+                )
                 ->dehydrateStateUsing(fn($state) => Hash::make($state)) // hashing (md5)
                 ->same('passwordConfirmation') // check password = passwordconfirmation
                 ->validationAttribute(__('filament-panels::pages/auth/register.form.password.validation_attribute')),
@@ -55,8 +56,9 @@ class Register extends AuthRegister
     {
         return Select::make('role')
             ->options([
-                'doctor' => RoleType::doctor->value,
-                'radiologist' => RoleType::radiologist->value,
+                RoleType::doctor->value => RoleType::doctor->name,
+                RoleType::radiologist->value => RoleType::radiologist->name,
+                RoleType::receptionist->value => RoleType::receptionist->name,
             ])
             ->required();
     }
