@@ -43,7 +43,7 @@ class ResultResource extends Resource
                 TextInput::make('name')->readOnly(),
                 TextInput::make('ssn')->readOnly(),
                 TextInput::make('result')
-                    ->readOnly(auth()->user()->hasRole(RoleType::radiologist->value))
+                    ->readOnly(!auth()->user()->hasRole(RoleType::doctor->value))
                     ->string(),
                 Select::make('medicines')
                     ->relationship('medicines', 'name')
@@ -51,7 +51,7 @@ class ResultResource extends Resource
                     ->multiple()
                     ->preload()
                     ->searchable()
-                    ->disabled(auth()->user()->hasRole(RoleType::radiologist->value))
+                    ->disabled(!auth()->user()->hasRole(RoleType::doctor->value))
                     ->hintAction(
                         fn (Select $component) => Action::make('select all')
                             ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))

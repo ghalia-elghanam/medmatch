@@ -19,7 +19,7 @@ class UserPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasRole(RoleType::doctor->value) || $user->hasRole(RoleType::admin->value);
+        return $user->hasRole(RoleType::receptionist->value) || $user->hasRole(RoleType::admin->value);
     }
 
     public function update(User $user): bool
@@ -29,6 +29,6 @@ class UserPolicy
 
     public function delete(User $user): bool
     {
-        return $user->hasRole(RoleType::doctor->value) || $user->hasRole(RoleType::admin->value);
+        return $user->hasRole(RoleType::receptionist->value) || $user->hasRole(RoleType::admin->value);
     }
 }
