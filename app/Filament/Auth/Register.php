@@ -39,7 +39,7 @@ class Register extends AuthRegister
                         ->numbers() // 45
                         ->symbols(), // & $ #
                 )
-                ->dehydrateStateUsing(fn($state) => Hash::make($state)) // hashing (md5)
+                ->dehydrateStateUsing(fn ($state) => Hash::make($state)) // hashing (md5)
                 ->same('passwordConfirmation') // check password = passwordconfirmation
                 ->validationAttribute(__('filament-panels::pages/auth/register.form.password.validation_attribute')),
             $this->getPasswordConfirmationFormComponent(), // passwordconfirmation
@@ -81,7 +81,7 @@ class Register extends AuthRegister
             ->iconColor('primary')
             ->success()
             ->title('New User Has Recently Registerd')
-            ->body('Name: ' . $user->name . ' && Role: ' . $user->getRoleNames()[0])
+            ->body('Name: '.$user->name.' && Role: '.$user->getRoleNames()[0])
             ->sendToDatabase($admin);
 
         return $user;

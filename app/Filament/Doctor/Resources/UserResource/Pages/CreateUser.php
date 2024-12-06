@@ -23,6 +23,7 @@ class CreateUser extends CreateRecord
             ->title('User created')
             ->body('The User has been created successfully.');
     }
+
     // email verify
     protected function mutateFormDataBeforeCreate(array $data): array
     {
@@ -30,6 +31,7 @@ class CreateUser extends CreateRecord
 
         return $data;
     }
+
     // take role of patient
     protected function afterCreate(): void
     {

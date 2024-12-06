@@ -4,9 +4,7 @@ namespace App\Filament\Doctor\Resources;
 
 use App\Enums\RoleType;
 use App\Filament\Doctor\Resources\MedicineResource\Pages;
-use App\Models\Component;
 use App\Models\Medicine;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -45,7 +43,7 @@ class MedicineResource extends Resource
                     ->disabled(auth()->user()->hasRole(RoleType::radiologist->value)) // prevent radiologist
                     ->multiple() // الدواء الواحد يمكن ان يحتوي علي اكثر من مكون
                     ->preload() // حملهم قبل ما الصفحة تحمل كلها
-                    ->searchable() // بقدر اعمل سيرش فيها
+                    ->searchable(), // بقدر اعمل سيرش فيها
             ])->columns(1);
     }
 

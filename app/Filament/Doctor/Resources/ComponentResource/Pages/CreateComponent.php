@@ -15,6 +15,7 @@ class CreateComponent extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
     // دا الاشعار اللي بيوصل
     protected function getCreatedNotification(): ?Notification
     {

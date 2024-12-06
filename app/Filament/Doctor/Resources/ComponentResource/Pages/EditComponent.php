@@ -18,11 +18,13 @@ class EditComponent extends EditRecord
             Actions\DeleteAction::make(), // delete
         ];
     }
+
     // دي الفنكشن اللي بترجعك للجدول تاني
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
     }
+
     // دا الاشعار اللي بيوصل
     protected function getSavedNotification(): ?Notification
     {

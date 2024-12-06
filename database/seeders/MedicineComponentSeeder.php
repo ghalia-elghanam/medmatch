@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class MedicineComponentSeeder extends Seeder
 {
@@ -81,7 +80,7 @@ class MedicineComponentSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'medicine_id' => 4,//
+                'medicine_id' => 4, //
                 'component_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -47,7 +47,6 @@ class Login extends AuthLogin
         ];
     }
 
-
     // error message when ssn wrong or password
     protected function throwFailureValidationException(): never
     {

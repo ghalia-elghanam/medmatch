@@ -17,7 +17,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 
 class ResultResource extends Resource
 {
@@ -43,7 +42,7 @@ class ResultResource extends Resource
                 TextInput::make('name')->readOnly(),
                 TextInput::make('ssn')->readOnly(),
                 TextInput::make('result')
-                    ->readOnly(!auth()->user()->hasRole(RoleType::doctor->value))
+                    ->readOnly(! auth()->user()->hasRole(RoleType::doctor->value))
                     ->string(),
                 Select::make('medicines')
                     ->relationship('medicines', 'name')
@@ -51,7 +50,7 @@ class ResultResource extends Resource
                     ->multiple()
                     ->preload()
                     ->searchable()
-                    ->disabled(!auth()->user()->hasRole(RoleType::doctor->value))
+                    ->disabled(! auth()->user()->hasRole(RoleType::doctor->value))
                     ->hintAction(
                         fn (Select $component) => Action::make('select all')
                             ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))

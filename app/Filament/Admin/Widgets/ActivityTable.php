@@ -2,19 +2,19 @@
 
 namespace App\Filament\Admin\Widgets;
 
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Z3d0X\FilamentLogger\Resources\ActivityResource;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Z3d0X\FilamentLogger\Resources\ActivityResource;
 
 class ActivityTable extends BaseWidget
 {
     protected static ?int $sort = 2;
+
     protected int|string|array $columnSpan = 'full';
+
     public function table(Table $table): Table
     {
         return $table
@@ -29,7 +29,7 @@ class ActivityTable extends BaseWidget
                     ->getStateUsing(function ($record) {
                         return $record?->causer?->name ?? 'System';
                     }),
-                    TextColumn::make('causer.roles.name')
+                TextColumn::make('causer.roles.name')
                     ->label('Role')
                     ->getStateUsing(function ($record) {
                         return $record?->causer?->roles?->pluck('name')->join(', ') ?? 'No Role';
@@ -39,10 +39,11 @@ class ActivityTable extends BaseWidget
                 TextColumn::make('subject_type')
                     ->label('Effected')
                     ->formatStateUsing(function ($state, Model $record) {
-                        if (!$state) {
+                        if (! $state) {
                             return '-';
                         }
-                        return Str::of($state)->afterLast('\\')->headline() . ' (record) ' . $record->subject_id;
+
+                        return Str::of($state)->afterLast('\\')->headline().' (record) '.$record->subject_id;
                     }),
                 TextColumn::make('created_at')
                     ->label('Logged At')

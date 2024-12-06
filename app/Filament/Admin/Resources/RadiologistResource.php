@@ -25,7 +25,7 @@ class RadiologistResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationLabel = 'Radiologist Management'; // 
+    protected static ?string $navigationLabel = 'Radiologist Management'; //
 
     protected static ?string $navigationGroup = 'Radiologist';
 

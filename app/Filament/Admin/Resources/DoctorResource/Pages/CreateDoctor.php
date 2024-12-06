@@ -27,6 +27,7 @@ class CreateDoctor extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['email_verified_at'] = now(); // verify email
+
         return $data;
     }
 

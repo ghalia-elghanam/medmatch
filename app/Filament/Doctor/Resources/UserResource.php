@@ -26,8 +26,10 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationGroup = 'Patient';// group name
+    protected static ?string $navigationGroup = 'Patient'; // group name
+
     protected static ?string $navigationLabel = 'Patient Information';  // label
+
     protected static ?int $navigationSort = 3; // sort
 
     public static function getNavigationBadge(): ?string
@@ -43,22 +45,22 @@ class UserResource extends Resource
             ->schema([
                 Section::make('Patient Info')->schema([
                     TextInput::make('name')
-                        ->readOnly(!auth()->user()->hasRole(RoleType::receptionist->value))
+                        ->readOnly(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->required()
                         ->string(),
                     TextInput::make('email')
-                        ->readOnly(!auth()->user()->hasRole(RoleType::receptionist->value))
+                        ->readOnly(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->required()
                         ->email(),
                     TextInput::make('ssn')
-                        ->readOnly(!auth()->user()->hasRole(RoleType::receptionist->value))
+                        ->readOnly(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->label('ssn')
                         ->required()
                         ->unique(ignoreRecord: true),
                 ])->columns(1),
                 Section::make('Patient Profile')->schema([
                     SpatieMediaLibraryFileUpload::make('profile')
-                        ->disabled(!auth()->user()->hasRole(RoleType::receptionist->value))
+                        ->disabled(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->image()
                         ->downloadable()
                         ->collection('profile'),
@@ -68,13 +70,13 @@ class UserResource extends Resource
                         ->multiple()
                         ->downloadable()
                         ->collection('rays')
-                        ->disabled(!auth()->user()->hasRole(RoleType::radiologist->value)),
+                        ->disabled(! auth()->user()->hasRole(RoleType::radiologist->value)),
                 ])->columns(1),
                 Section::make('Patient History')->schema([
                     Select::make('allergies_medicine')
                         ->relationship('allergies_medicine', 'name')
                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                        ->disabled(!auth()->user()->hasRole(RoleType::receptionist->value))
+                        ->disabled(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->multiple()
                         ->preload()
                         ->searchable()
@@ -95,7 +97,7 @@ class UserResource extends Resource
                     Select::make('allergies_component')
                         ->relationship('allergies_component', 'name')
                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                        ->disabled(!auth()->user()->hasRole(RoleType::receptionist->value))
+                        ->disabled(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->multiple()
                         ->preload()
                         ->searchable()
@@ -146,6 +148,7 @@ class UserResource extends Resource
                     ),
             ]);
     }
+
     public static function getPages(): array
     {
         return [

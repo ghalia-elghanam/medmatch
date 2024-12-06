@@ -143,7 +143,6 @@ class UserSeeder extends Seeder
         )->assignRole(RoleType::patient->value);
         //############ Patients #############
 
-
         //############ receptionist #############
         User::query()->updateOrCreate(
             ['email' => 'receptionist@gmail.com'],

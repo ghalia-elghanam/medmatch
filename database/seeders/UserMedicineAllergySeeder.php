@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserMedicineAllergySeeder extends Seeder
 {
@@ -39,8 +38,8 @@ class UserMedicineAllergySeeder extends Seeder
                 'user_allergy_medicine_id' => 4,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
-            
+            ],
+
         ];
         collect($user_allergy_medicine)->chunk(5)->each(function ($chunk) {
             DB::table('user_allergy_medicine')->insert($chunk->toArray());
