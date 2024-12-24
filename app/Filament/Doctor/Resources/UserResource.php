@@ -29,7 +29,7 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'Patient'; // group name
 
     protected static ?string $navigationLabel = 'Patient Information';  // label
-
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 3; // sort
 
     public static function getNavigationBadge(): ?string

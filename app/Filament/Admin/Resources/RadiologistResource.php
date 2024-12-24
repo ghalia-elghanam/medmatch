@@ -30,7 +30,7 @@ class RadiologistResource extends Resource
     protected static ?string $navigationGroup = 'Radiologist';
 
     protected static ?int $navigationSort = 2;
-
+    protected static ?string $navigationIcon = 'heroicon-o-viewfinder-circle';
     public static function getNavigationBadge(): ?string
     {
         $radiologist = User::role(RoleType::radiologist->value)->count();
@@ -120,8 +120,8 @@ class RadiologistResource extends Resource
                         ->successNotification(
                             Notification::make()
                                 ->success()
-                                ->title('All Surgeries deleted')
-                                ->body('All Surgeries have been deleted successfully.'),
+                                ->title('All records deleted')
+                                ->body('All records have been deleted successfully.'),
                         ),
                 ]),
             ]);

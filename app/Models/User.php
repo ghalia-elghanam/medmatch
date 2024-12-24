@@ -73,7 +73,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         );
     }
 
-    // دول الاتنين كولكشن اللي الدكاتره بتتعامل معاهم
+    // د كولكشن اللي الدكاتره بتتعامل معاه
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile')->singleFile();

@@ -22,7 +22,7 @@ class MedicineResource extends Resource
     protected static ?string $navigationGroup = 'Medicine Management'; // group name
 
     protected static ?int $navigationSort = 2; // order resource
-
+    protected static ?string $navigationIcon = 'heroicon-o-circle-stack';
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count(); // number of records

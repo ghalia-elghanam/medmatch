@@ -39,7 +39,7 @@ class DoctorPanelProvider extends PanelProvider
             ->brandLogo(url('logo.png'))
             ->brandLogoHeight('5rem')
             ->favicon(url('logo.png'))
-
+            ->profile()
             ->id('doctor')
             ->path('doctor')
             ->colors([

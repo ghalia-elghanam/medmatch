@@ -25,7 +25,7 @@ class ResultResource extends Resource
     protected static ?string $navigationLabel = 'Patient Result';
 
     protected static ?string $navigationGroup = 'Patient';
-
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
     protected static ?int $navigationSort = 4;
 
     public static function getNavigationBadge(): ?string

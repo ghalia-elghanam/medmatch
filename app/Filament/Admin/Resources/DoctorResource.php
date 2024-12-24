@@ -30,7 +30,7 @@ class DoctorResource extends Resource
     protected static ?string $navigationGroup = 'Doctor'; // group name
 
     protected static ?int $navigationSort = 1; // sort order
-
+    protected static ?string $navigationIcon = 'heroicon-o-beaker';
     public static function getNavigationBadge(): ?string
     {
         $doctor = User::role(RoleType::doctor->value)->count(); // return number of doctors

@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 class Login extends AuthLogin
 {
-    // دي بتحط ال heading
+    // heading
     public function getHeading(): string|Htmlable
     {
         return __('Doctor Login');
@@ -29,7 +29,7 @@ class Login extends AuthLogin
             ->statePath('data');
     }
 
-    // دا تفصيل حقل ال ssn
+    //  ل ssn
     protected function getSsnFormComponent(): Component
     {
         return TextInput::make('ssn')
@@ -52,7 +52,7 @@ class Login extends AuthLogin
     {
         throw ValidationException::withMessages([
             'data.ssn' => __('Invalid SSN'),
-            'data.password' => __('Invalid Password'),
+            'data.password' => __('check Password  '),
         ]);
     }
 }
