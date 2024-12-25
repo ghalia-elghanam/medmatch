@@ -10,8 +10,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->patient_id();
-            $table->patient_id_value();
+            $table->id();
+          
             $table->string('name');
             $table->string('email')->unique();
             $table->string('ssn')->index()->unique()->nullable();
@@ -22,9 +22,7 @@ return new class extends Migration
             $table->date('birth')->nullable();
             $table->string('gender')->nullable();
             $table->string('address')->nullable();
-            $table->string('medical_problems')->nullable();
-            $table->string('allergies')->nullable();
-            $table->string('medications')->nullable();
+        
             $table->rememberToken();
             $table->timestamps();
         });
