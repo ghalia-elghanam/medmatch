@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_allergy_medicine', function (Blueprint $table) {
             $table->id();
+            
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_allergy_medicine_id')->constrained('medicines')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

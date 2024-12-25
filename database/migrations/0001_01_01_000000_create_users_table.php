@@ -6,13 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+  
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->patient_id();
+            $table->patient_id_value();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('ssn')->index()->unique()->nullable();
@@ -23,6 +22,9 @@ return new class extends Migration
             $table->date('birth')->nullable();
             $table->string('gender')->nullable();
             $table->string('address')->nullable();
+            $table->string('medical_problems')->nullable();
+            $table->string('allergies')->nullable();
+            $table->string('medications')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -43,9 +45,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+  
     public function down(): void
     {
         Schema::dropIfExists('users');
