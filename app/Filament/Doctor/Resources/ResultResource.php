@@ -41,6 +41,19 @@ class ResultResource extends Resource
             ->schema([
                 TextInput::make('name')->readOnly(),
                 TextInput::make('ssn')->readOnly(),
+            
+
+
+                Select::make('user_allergy_medicine')
+                ->relationship('allergies_medicine', 'name')
+                ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                ->multiple()
+                ->disabled( auth()->user()->hasRole(RoleType::doctor->value)),
+            Select::make('user_allergy_component')
+                ->relationship('allergies_component', 'name')
+                ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                ->multiple()
+                ->disabled( auth()->user()->hasRole(RoleType::doctor->value)),
                 TextInput::make('result')
                     ->readOnly(! auth()->user()->hasRole(RoleType::doctor->value))
                     ->string(),
@@ -64,8 +77,13 @@ class ResultResource extends Resource
                             $messages = $conflicts->pluck('msg')->unique()->implode(' & ');
 
                             Notification::make()
-                                ->title('Conflicts Detected')
-                                ->body("Reasons: $messages")
+                                ->title('⚠️ Medication warning')
+                                ->body("
+                                <div>
+                                    <p><strong>Reasons:</strong> $messages</p>
+                                    <p>           Please review immediately.</p>
+                                </div>
+                            ")
                                 ->warning()
                                 ->persistent()
                                 ->send();
@@ -91,7 +109,7 @@ class ResultResource extends Resource
                 ->map(fn ($name) => json_decode($name, true)['en'] ?? 'Unknown') // استخراج الاسم باللغة الإنجليزية
                 ->implode(', ');
             $messages->push((object) [
-                'msg' => "The patient is allergic to these medicines: $medicineNames.",
+                'msg' => "patient is allergic to these medicines: $medicineNames.",
             ]);
         }
 
@@ -111,7 +129,7 @@ class ResultResource extends Resource
                 ->map(fn ($name) => json_decode($name, true)['en'] ?? 'Unknown') // استخراج الاسم باللغة الإنجليزية
                 ->implode(', ');
             $messages->push((object) [
-                'msg' => "The patient is allergic to these components: $componentNames.",
+                'msg' => "patient is allergic to these components: $componentNames.",
             ]);
         }
 
