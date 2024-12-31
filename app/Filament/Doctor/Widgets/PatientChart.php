@@ -30,7 +30,7 @@ class PatientChart extends ApexChartWidget
         return [
             'chart' => [
                 'type' => 'line',
-                'height' => 300,
+                'height' => 400,
             ],
             'colors' => ['#2F919F'],
             'stroke' => [
