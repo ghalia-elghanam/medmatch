@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Blockchain Connect demo</title>
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    
 </head>
 <body>
@@ -165,62 +165,119 @@
 </svg>
 
 
+<div class="container">
+  <h1>Smart Contract Interaction with Whitechain</h1>
 
+  <!-- Set Data Form -->
+  <form id="setForm">
+      <div class="mb-3">
+          <label for="exampleInputid" class="form-label">ID</label>
+          <input type="text" class="form-control" id="exampleInputid" required>
+          <div class="form-text">Enter an ID.</div>
+      </div>
+      <div class="mb-3">
+          <label for="exampleInputname" class="form-label">Name</label>
+          <input type="text" class="form-control" id="exampleInputname" required>
+          <div class="form-text">Enter a name.</div>
+      </div>
+      <div class="mb-3">
+          <label for="exampleInputdata" class="form-label">Data</label>
+          <input type="text" class="form-control" id="exampleInputdata" required>
+          <div class="form-text">Enter data.</div>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 
+  <!-- Get Data Form -->
+  <form id="getForm" class="pt-5">
+      <div class="mb-3">
+          <label for="getinfo" class="form-label">Info</label>
+          <input type="text" class="form-control" id="getinfo" required>
+          <div class="form-text">Enter the ID to retrieve information.</div>
+      </div>
+      <button type="submit" class="btn btn-primary">Get Info</button>
+  </form>
 
-<div class='container'>
-<form>
-  <div class="mb-3">
-    <label for="exampleInputid" class="form-label">ID</label>
-    <input type='text' class="form-control" id="exampleInputid" aria-describedby="emailHelp">
-    <div id="emailHelp" class="form-text">text ID input.</div>
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputname" class="form-label">name</label>
-    <input type='text' class="form-control" id="exampleInputname" aria-describedby="emailHelp">
-    <div id="emailHelp" class="form-text">text name input.</div>
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputdata" class="form-label">data</label>
-    <input type='text' class="form-control" id="exampleInputdata" aria-describedby="emailHelp">
-    <div id="emailHelp" class="form-text">text data input.</div>
-  </div>
-
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-
-<form>
-  <div class="mb-3 pt-5" >
-    <label for="getinfo" class="form-label"> info</label>
-    <input type='text' class="form-control" id="getinfo" aria-describedby="gethelp">
-    <div id="gethelp" class="form-text">get input.</div>
-  </div>
-
-  <button type="submit" class="btn btn-primary">get info</button>
-</form>
-
-
-
-
-
-
-
-
-
-
+  <!-- Result Display -->
+  <div class="mt-4" id="result"></div>
 </div>
 
+<script>
+  const contractABI = [
+      {
+          "inputs": [{ "internalType": "string", "name": "_id", "type": "string" }],
+          "name": "get",
+          "outputs": [
+              { "internalType": "string", "name": "name", "type": "string" },
+              { "internalType": "string", "name": "data", "type": "string" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [
+              { "internalType": "string", "name": "_id", "type": "string" },
+              { "internalType": "string", "name": "_name", "type": "string" },
+              { "internalType": "string", "name": "_data", "type": "string" }
+          ],
+          "name": "set",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+      }
+  ];
+  const contractAddress = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
+  const web3 = new Web3(window.ethereum);
+  const contract = new web3.eth.Contract(contractABI, contractAddress);
 
+  // Handle set form submission
+  document.getElementById("setForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
 
+      const id = document.getElementById("exampleInputid").value;
+      const name = document.getElementById("exampleInputname").value;
+      const data = document.getElementById("exampleInputdata").value;
 
+      try {
+          // Request accounts from MetaMask
+          const accounts = await ethereum.request({ method: "eth_requestAccounts" });
 
+          // Prepare the transaction data
+          const tx = {
+              from: accounts[0],
+              to: contractAddress,
+              data: contract.methods.set(id, name, data).encodeABI(),
+              gas: 2000000,  // Adjust the gas limit
+              gasPrice: web3.utils.toWei('20', 'gwei'),  // Set the gas price manually
+          };
 
+          // Send the transaction
+          await web3.eth.sendTransaction(tx);
+          alert("Data successfully stored!");
+      } catch (error) {
+          console.error(error);
+          alert("Failed to store data.");
+      }
+  });
 
+  // Handle get form submission
+  document.getElementById("getForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
 
+      const id = document.getElementById("getinfo").value;
 
-
-
+      try {
+          // Call the smart contract's get function
+          const result = await contract.methods.get(id).call();
+          
+          // Display the result
+          document.getElementById("result").innerHTML = `<p>Name: ${result.name}</p><p>Data: ${result.data}</p>`;
+      } catch (error) {
+          console.error(error);
+          alert("Failed to retrieve data.");
+      }
+  });
+</script>
 
 
 
@@ -229,187 +286,201 @@
 
 
 <script>
-    const BSC_CHAIN_ID = "0x4268";
-    const BSC_DETAILS = {
-        chainId: BSC_CHAIN_ID,
-        chainName: "Holesky Test Network",
-        rpcUrls: ["https://rpc.holesky.ethpandaops.io"],  // Holesky RPC URL
-        nativeCurrency: {
-            name: "ETH",
-            symbol: "ETH",
-            decimals: 18
-        },
-        blockExplorerUrls: ["holesky.etherscan.io"]  // Holesky block explorer URL
-    };
-    const ABI=[
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_id",
-				"type": "string"
-			}
-		],
-		"name": "get",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "data",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_id",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_data",
-				"type": "string"
-			}
-		],
-		"name": "set",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	}
+  const BSC_CHAIN_ID = "0xA41";
+  const BSC_DETAILS = {
+      chainId: BSC_CHAIN_ID,
+      chainName: "Whitechain Testnet",
+      rpcUrls: ["https://rpc-testnet.whitechain.io"],  // Holesky RPC URL
+      nativeCurrency: {
+          name:"WBT",
+          symbol: "WBT",
+          decimals: 18
+      },
+      blockExplorerUrls: ["testnet.whitechain.io"]  // Holesky block explorer URL
+  };
+  const ABI=[
+{
+  "inputs": [
+    {
+      "internalType": "string",
+      "name": "_id",
+      "type": "string"
+    }
+  ],
+  "name": "get",
+  "outputs": [
+    {
+      "internalType": "string",
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "internalType": "string",
+      "name": "data",
+      "type": "string"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+},
+{
+  "inputs": [
+    {
+      "internalType": "string",
+      "name": "_id",
+      "type": "string"
+    },
+    {
+      "internalType": "string",
+      "name": "_name",
+      "type": "string"
+    },
+    {
+      "internalType": "string",
+      "name": "_data",
+      "type": "string"
+    }
+  ],
+  "name": "set",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+}
 ];
-const contractAddress = "0xC12c7b81c1452bB0D142BdEeFC2Df1fb8BE02962"; //
-const web32 = new Web3(window.ethereum);
+//const contractAddress = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d"; // wait to send it 
+//const web32 = new Web3(window.ethereum);
 
 // Initialize the contract
-const contract2 = new web32.eth.Contract(ABI, contractAddress);
+//const contract2 = new web32.eth.Contract(ABI, contractAddress);
+  const ERROR_CODE_NETWORK_NOT_ADDED = 4902;
+  const connectButton = document.getElementById('ConnectButton');
+  const metaMaskButton = document.getElementById('MetaMaskButton');
+  const noExtensionFoundModal = document.getElementById('NoExtensionFound');
+  const yourAddressInput = document.getElementById('yourText1');
+  const NetworkBu = document.getElementById('NetworkBu');
+  // Utility to update button
+  function updateButton(targetModal, buttonText, spinnerColor) {
+      connectButton.setAttribute('data-bs-target', targetModal);
+      connectButton.innerHTML = `<span class="spinner-grow spinner-grow-sm ${spinnerColor}" role="status"></span> ${buttonText}`;
+  }
+  // Handle network switch button click
+  NetworkBu.onclick = async () => {
+      NetworkBu.disabled = true;
+      NetworkBu.innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
 
+      try {
+          await ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: BSC_CHAIN_ID }]
+          });
+          const accounts = await ethereum.request({ method: 'eth_accounts' });
+          if (yourAddressInput) yourAddressInput.value = accounts[0];
+          updateButton('#YourWallet', `0x${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, 'text-success');
+      } catch (switchError) {
+          if (switchError.code === ERROR_CODE_NETWORK_NOT_ADDED) {
+              try {
+                  await ethereum.request({
+                      method: 'wallet_addEthereumChain',
+                      params: [BSC_DETAILS]
+                  });
+                  NetworkBu.innerHTML = `Network Added Successfully`;
+              } catch (addError) {
+                  console.error('Failed to add BSC network:', addError);
+                  NetworkBu.disabled = false;
+                  NetworkBu.innerHTML = `Failed to Add Network`;
+              }
+          } else {
+              console.error('Network switch failed:', switchError);
+              NetworkBu.disabled = false;
+              NetworkBu.innerHTML = `Retry Switch Network`;
+          }
+      }
+  };
+  // Handle MetaMask connect button click
+  async function onClickConnect() {
+      if (typeof window.ethereum === 'undefined') {
+          new bootstrap.Modal(noExtensionFoundModal).show();
+          return;
+      }
 
+      metaMaskButton.disabled = true;
+      document.getElementById('MetaMaskButtonP').innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
 
+      try {
+          await ethereum.request({ method: 'eth_requestAccounts' });
+          const chainId = await ethereum.request({ method: 'eth_chainId' });
+          const accounts = await ethereum.request({ method: 'eth_accounts' });
 
-    const ERROR_CODE_NETWORK_NOT_ADDED = 4902;
-    const connectButton = document.getElementById('ConnectButton');
-    const metaMaskButton = document.getElementById('MetaMaskButton');
-    const noExtensionFoundModal = document.getElementById('NoExtensionFound');
-    const yourAddressInput = document.getElementById('yourText1');
-    const NetworkBu = document.getElementById('NetworkBu');
-    // Utility to update button
-    function updateButton(targetModal, buttonText, spinnerColor) {
-        connectButton.setAttribute('data-bs-target', targetModal);
-        connectButton.innerHTML = `<span class="spinner-grow spinner-grow-sm ${spinnerColor}" role="status"></span> ${buttonText}`;
-    }
-    // Handle network switch button click
-    NetworkBu.onclick = async () => {
-        NetworkBu.disabled = true;
-        NetworkBu.innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
+          if (accounts.length === 0) {
+              alert('No accounts found. Please log in to your wallet.');
+              metaMaskButton.disabled = false;
+              document.getElementById('MetaMaskButtonP').innerHTML = `MetaMask`;
+              return;
+          }
 
-        try {
-            await ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: BSC_CHAIN_ID }]
-            });
-            const accounts = await ethereum.request({ method: 'eth_accounts' });
-            if (yourAddressInput) yourAddressInput.value = accounts[0];
-            updateButton('#YourWallet', `0x${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, 'text-success');
-        } catch (switchError) {
-            if (switchError.code === ERROR_CODE_NETWORK_NOT_ADDED) {
-                try {
-                    await ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [BSC_DETAILS]
-                    });
-                    NetworkBu.innerHTML = `Network Added Successfully`;
-                } catch (addError) {
-                    console.error('Failed to add BSC network:', addError);
-                    NetworkBu.disabled = false;
-                    NetworkBu.innerHTML = `Failed to Add Network`;
-                }
-            } else {
-                console.error('Network switch failed:', switchError);
-                NetworkBu.disabled = false;
-                NetworkBu.innerHTML = `Retry Switch Network`;
-            }
-        }
-    };
-    // Handle MetaMask connect button click
-    async function onClickConnect() {
-        if (typeof window.ethereum === 'undefined') {
-            new bootstrap.Modal(noExtensionFoundModal).show();
-            return;
-        }
+          if (chainId === BSC_CHAIN_ID) {
+              updateButton('#YourWallet', `0x${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, 'text-success');
+              if (yourAddressInput) yourAddressInput.value = accounts[0];
+          } else {
+              updateButton('#ChangeNetwork', 'Switch Network', 'text-danger');
+              document.getElementById('MetaMaskButtonP').innerHTML = `Connected`;
+          }
+      } catch (error) {
+          console.error('Error during wallet connection:', error);
+          metaMaskButton.disabled = false;
+          document.getElementById('MetaMaskButtonP').innerHTML = `MetaMask`;
+      }
+  }
+  // Initialization function to set up the button states
+  async function initialize() {
+      connectButton.innerHTML = '<span class="spinner-grow spinner-grow-sm text-secondary"></span> Connect Wallet';
+      connectButton.setAttribute('data-bs-target', '#ConnectWallet');
+      metaMaskButton.onclick = onClickConnect;
 
-        metaMaskButton.disabled = true;
-        document.getElementById('MetaMaskButtonP').innerHTML = `<span class="spinner-border spinner-border-sm"></span>`;
+      if (typeof window.ethereum === 'undefined') {
+          console.warn('Ethereum provider is not available.');
+          return;
+      }
 
-        try {
-            await ethereum.request({ method: 'eth_requestAccounts' });
-            const chainId = await ethereum.request({ method: 'eth_chainId' });
-            const accounts = await ethereum.request({ method: 'eth_accounts' });
+      try {
+          const accounts = await ethereum.request({ method: 'eth_accounts' });
+          const chainId = await ethereum.request({ method: 'eth_chainId' });
 
-            if (accounts.length === 0) {
-                alert('No accounts found. Please log in to your wallet.');
-                metaMaskButton.disabled = false;
-                document.getElementById('MetaMaskButtonP').innerHTML = `MetaMask`;
-                return;
-            }
-
-            if (chainId === BSC_CHAIN_ID) {
-                updateButton('#YourWallet', `0x${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, 'text-success');
-                if (yourAddressInput) yourAddressInput.value = accounts[0];
-            } else {
-                updateButton('#ChangeNetwork', 'Switch Network', 'text-danger');
-                document.getElementById('MetaMaskButtonP').innerHTML = `Connected`;
-            }
-        } catch (error) {
-            console.error('Error during wallet connection:', error);
-            metaMaskButton.disabled = false;
-            document.getElementById('MetaMaskButtonP').innerHTML = `MetaMask`;
-        }
-    }
-    // Initialization function to set up the button states
-    async function initialize() {
-        connectButton.innerHTML = '<span class="spinner-grow spinner-grow-sm text-secondary"></span> Connect Wallet';
-        connectButton.setAttribute('data-bs-target', '#ConnectWallet');
-        metaMaskButton.onclick = onClickConnect;
-
-        if (typeof window.ethereum === 'undefined') {
-            console.warn('Ethereum provider is not available.');
-            return;
-        }
-
-        try {
-            const accounts = await ethereum.request({ method: 'eth_accounts' });
-            const chainId = await ethereum.request({ method: 'eth_chainId' });
-
-            if (accounts.length > 0) {
-                if (chainId === BSC_CHAIN_ID) {
-                    updateButton('#YourWallet', `0x${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, 'text-success');
-                    if (yourAddressInput) yourAddressInput.value = accounts[0];
-                } else {
-                    updateButton('#ChangeNetwork', 'Switch Network', 'text-danger');
-                }
-            } else {
-                connectButton.setAttribute('data-bs-target', '#ConnectWallet');
-            }
-        } catch (error) {
-            console.error('Error during initialization:', error);
-        }
-    }
-    window.addEventListener('DOMContentLoaded', initialize);
+          if (accounts.length > 0) {
+              if (chainId === BSC_CHAIN_ID) {
+                  updateButton('#YourWallet', `0x${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, 'text-success');
+                  if (yourAddressInput) yourAddressInput.value = accounts[0];
+              } else {
+                  updateButton('#ChangeNetwork', 'Switch Network', 'text-danger');
+              }
+          } else {
+              connectButton.setAttribute('data-bs-target', '#ConnectWallet');
+          }
+      } catch (error) {
+          console.error('Error during initialization:', error);
+      }
+  }
+  window.addEventListener('DOMContentLoaded', initialize);
 
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
