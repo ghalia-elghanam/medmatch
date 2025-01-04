@@ -97,16 +97,16 @@ class ResultResource extends Resource
         $messages = collect();
 
         // 1. Check if the patient is allergic to any selected medicines
-        $allergicMedicines = DB::table('user_allergy_medicine')
+        $allergicMedicines = DB::table('user_allergy_medicine')//table
             ->where('user_id', $patient->id)
             ->whereIn('user_allergy_medicine_id', $selectedMedicineIds)
             ->get(['user_allergy_medicine_id']);
         if ($allergicMedicines->isNotEmpty()) {
             // get name of medicine
-            $medicineNames = DB::table('medicines')
+            $medicineNames = DB::table('medicines')//table
                 ->whereIn('id', $allergicMedicines->pluck('user_allergy_medicine_id'))
-                ->pluck('name')
-                ->map(fn ($name) => json_decode($name, true)['en'] ?? 'Unknown') // استخراج الاسم باللغة الإنجليزية
+                ->pluck('name')//catch
+                ->map(fn ($name) => json_decode($name, true)['en'] ?? 'Unknown') //only استخراج الاسم باللغة الإنجليزية
                 ->implode(', ');
             $messages->push((object) [
                 'msg' => "patient is allergic to these medicines: $medicineNames.",
@@ -115,15 +115,15 @@ class ResultResource extends Resource
 
         // 2. Check if the patient is allergic to any components of the selected medicines
         // بشوف مكونات الدواء اللي اخترته عشان اقدر اسرش عليها
-        $medicineComponents = DB::table('medicine_component')
+        $medicineComponents = DB::table('medicine_component') //table
             ->whereIn('medicine_id', $selectedMedicineIds)
             ->pluck('component_id');
-        $allergicComponents = DB::table('user_allergy_component')
+        $allergicComponents = DB::table('user_allergy_component')//table
             ->where('user_id', $patient->id)
             ->whereIn('user_allergy_component_id', $medicineComponents)
             ->get(['user_allergy_component_id']);
         if ($allergicComponents->isNotEmpty()) {
-            $componentNames = DB::table('components')
+            $componentNames = DB::table('components')//table
                 ->whereIn('id', $allergicComponents->pluck('user_allergy_component_id'))
                 ->pluck('name')
                 ->map(fn ($name) => json_decode($name, true)['en'] ?? 'Unknown') // استخراج الاسم باللغة الإنجليزية
@@ -134,7 +134,7 @@ class ResultResource extends Resource
         }
 
         // 3. Check for restricted combinations between selected medicines
-        $restrictions = DB::table('restricted_medicines')
+        $restrictions = DB::table('restricted_medicines')//table
             ->whereIn('medicine_id', $selectedMedicineIds)
             ->whereIn('restricted_medicine_id', $selectedMedicineIds)
             ->get(['medicine_id', 'restricted_medicine_id', 'msg']);
