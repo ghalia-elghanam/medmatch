@@ -30,14 +30,19 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = 'Patient Information';  // label
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?int $navigationSort = 3; // sort
+    protected static ?int $navigationSort = 3;// sort
 
-    public static function getNavigationBadge(): ?string
+    /*public static function getNavigationBadge(): ?string
     {
         $patient = User::role(RoleType::patient->value)->count(); // هاتلي عدد كل المرضي
 
         return $patient;
+    }*/
+    public static function getNavigationBadge(): ?string
+    {
+      return 'create';
     }
+
 
     public static function form(Form $form): Form
     {
@@ -47,7 +52,8 @@ class UserResource extends Resource
                     TextInput::make('name')
                         ->readOnly(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->required()
-                        ->string(),
+                        ->string()
+                        ->id('patient-name'),
                     TextInput::make('email')
                         ->readOnly(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->required()
@@ -56,7 +62,13 @@ class UserResource extends Resource
                         ->readOnly(! auth()->user()->hasRole(RoleType::receptionist->value))
                         ->label('ssn')
                         ->required()
+                        ->id('patient-ssn')
                         ->unique(ignoreRecord: true),
+                        TextInput::make('patient history')
+                      //  ->readOnly(! auth()->user()->hasRole(RoleType::receptionist->value))
+                        ->label('patient history')
+                        ->required()
+                        ->id('patient-history')
                 ])->columns(1),
                 Section::make('Patient Profile')->schema([
                     SpatieMediaLibraryFileUpload::make('profile')
@@ -116,9 +128,19 @@ class UserResource extends Resource
                                 ->locales(config('app.available_locale')),
                         ]),
                 ])->columns(1),
+              
+              
             ]);
     }
-
+    public function getFormActions(){
+      return[
+    Action::make('connectMetaMask')
+    ->label('Connect to MetaMask')
+    ->action('connectToMetaMask')
+    ->extraAttributes(['id' => 'MetaMaskButton']), // Add an ID for JavaScript
+];
+  
+    }
     public static function table(Table $table): Table
     {
         return $table

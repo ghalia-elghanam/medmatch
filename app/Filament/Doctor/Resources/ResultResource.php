@@ -30,9 +30,7 @@ class ResultResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $patient = User::role(RoleType::patient->value)->count();
-
-        return $patient;
+      return 'matching';
     }
 
     public static function form(Form $form): Form

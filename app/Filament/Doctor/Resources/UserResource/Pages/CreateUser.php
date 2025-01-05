@@ -13,8 +13,11 @@ class CreateUser extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        return route('blockchain.transaction', [
+            'user' => $this->record->id
+        ]);
     }
+    
 
     protected function getCreatedNotification(): ?Notification
     {
@@ -24,7 +27,6 @@ class CreateUser extends CreateRecord
             ->body('The User has been created successfully.');
     }
 
-    // email verify
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['email_verified_at'] = now();
@@ -32,9 +34,9 @@ class CreateUser extends CreateRecord
         return $data;
     }
 
-    // take role of patient
     protected function afterCreate(): void
     {
+        // Assign role of patient
         $this->record->assignRole(RoleType::patient->value);
     }
 }

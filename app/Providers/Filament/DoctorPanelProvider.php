@@ -25,6 +25,7 @@ use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 
 class DoctorPanelProvider extends PanelProvider
 {
+  
     public function panel(Panel $panel): Panel
     {
         Notifications::alignment(Alignment::Center);
@@ -42,10 +43,12 @@ class DoctorPanelProvider extends PanelProvider
             ->profile()
             ->id('doctor')
             ->path('doctor')
+            ->sideBarCollapsibleOnDesktop()
+            ->sideBarFullyCollapsibleOnDesktop()
             ->colors([
-                'primary' => '#2F919F',
-            ])
-
+              'primary' => '#2F919F',
+          ])
+          
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\\Filament\\Doctor\\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\\Filament\\Doctor\\Pages')
             ->pages([
@@ -76,6 +79,11 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->plugins([ // plugin
                 FilamentApexChartsPlugin::make(),
-            ]);
+            ])
+            ->renderHook(
+              'panels::body.end',
+              fn () => view('customFooter')
+          )
+;          
     }
 }

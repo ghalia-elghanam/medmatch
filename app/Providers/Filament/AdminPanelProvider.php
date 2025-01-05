@@ -39,7 +39,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(url('logo.png'))
             ->brandLogoHeight('5rem')
             ->favicon(url('logo.png'))
-
+            ->sideBarCollapsibleOnDesktop()
+            ->sideBarFullyCollapsibleOnDesktop()
             ->id('admin')
             ->path('admin')
             ->colors([
@@ -84,6 +85,14 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 // FilamentApexChartsPlugin::make(),
                 FilamentSpatieLaravelBackupPlugin::make()->usingPage(Backups::class), // backup
-            ]);
+            ])
+            
+            ->renderHook(
+              // This line tells us where to render it
+              'panels::body.end',
+              // This is the view that will be rendered
+              fn () => view('customFooter'),
+          );
+            
     }
 }
