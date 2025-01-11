@@ -22,6 +22,7 @@ class SystemOverview extends BaseWidget
 
             Stat::make('Doctors', User::role(RoleType::doctor->value)->count())
                 ->icon('heroicon-o-beaker'),
+      
         ];
     }
 }

@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
-                'password' => bcrypt('0000000000'),
+                'password' => bcrypt('Amin$wise00'),
                 'ssn' => '0000000000',
                 'birth' => '01/01/1950',
                 'gender' => GenderType::male->value,
@@ -36,8 +36,8 @@ class UserSeeder extends Seeder
             ['email' => 'doctor@gmail.com'],
             [
                 'name' => 'Doctor',
-                'email' => 'doctor@gmail.com',
-                'password' => bcrypt('doctor@gmail.com'),
+                'email' => 'ahmadmaher@gmail.com',
+                'password' => bcrypt('Am8ff_yoo0'),
                 'ssn' => '9638527415',
                 'birth' => '01/01/1950',
                 'gender' => GenderType::male->value,
@@ -46,15 +46,14 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         )->assignRole(RoleType::doctor->value);
-        //############ Doctor #############
-
+    
         //############ Radiologist #############
         User::query()->updateOrCreate(
             ['email' => 'radiologist@gmail.com'],
             [
                 'name' => 'Radiologist',
                 'email' => 'radiologist@gmail.com',
-                'password' => bcrypt('radiologist@gmail.com'),
+                'password' => bcrypt('R@di0xray669'),
                 'ssn' => '1593578235',
                 'birth' => '01/01/1950',
                 'gender' => GenderType::male->value,
@@ -149,7 +148,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Receptionist',
                 'email' => 'receptionist@gmail.com',
-                'password' => bcrypt('receptionist@gmail.com'),
+                'password' => bcrypt('Re@eputty55'),
                 'ssn' => '5556662221',
                 'birth' => '01/01/1950',
                 'gender' => GenderType::male->value,

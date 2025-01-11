@@ -20,6 +20,7 @@ class MedicineSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            
             [
                 'name' => json_encode([
                     'en' => 'Rifampin',

@@ -17,7 +17,7 @@ use Illuminate\Validation\Rules\Password;
 
 class Register extends AuthRegister
 {
-    // دي بتحط ال heading
+      // Method to set the heading for the registration page
     public function getHeading(): string|Htmlable
     {
         return __('Doctor Registration');
@@ -48,7 +48,7 @@ class Register extends AuthRegister
                 ->rule(['unique:users,ssn']),
             $this->getRoleFormComponent(), // role
 
-        ])->statePath('data');
+        ])->statePath('data');// Specify where the form state is stored
     }
 
     // to select role when register

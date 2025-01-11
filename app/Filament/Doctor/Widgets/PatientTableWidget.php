@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 class PatientTableWidget extends BaseWidget
 {
     protected static ?int $sort = 1;
-
+    protected int | string | array $columnSpan = 'full';
     public function table(Table $table): Table
     {
         return $table
@@ -37,13 +37,7 @@ class PatientTableWidget extends BaseWidget
                     TextInput::make('name'),
                     TextInput::make('email'),
                     TextInput::make('ssn'),
-                    SpatieMediaLibraryFileUpload::make('profile')
-                        ->downloadable()
-                        ->collection('profile'),
-                    SpatieMediaLibraryFileUpload::make('rays')
-                        ->multiple()
-                        ->downloadable()
-                        ->collection('rays'),
+                    
                     Select::make('allergies_medicine')
                         ->relationship('allergies_medicine', 'name')
                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)

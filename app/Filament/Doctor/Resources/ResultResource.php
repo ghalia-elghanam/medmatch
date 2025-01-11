@@ -62,10 +62,7 @@ class ResultResource extends Resource
                     ->preload()
                     ->searchable()
                     ->disabled(! auth()->user()->hasRole(RoleType::doctor->value))
-                    ->hintAction(
-                        fn (Select $component) => Action::make('select all')
-                            ->action(fn () => $component->state(Medicine::pluck('id')->toArray()))
-                    )
+                    
                     ->reactive()
                     ->afterStateUpdated(function ($state, $livewire) {
                         $patient = $livewire->record;
